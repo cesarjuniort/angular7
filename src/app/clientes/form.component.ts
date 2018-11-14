@@ -12,7 +12,7 @@ export class FormComponent implements OnInit {
 
   private cliente: Cliente = new Cliente();
   private titulo = 'Crear Cliente';
-
+  private errors: string[];
   constructor(private clienteSvr: ClienteService,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -27,6 +27,9 @@ export class FormComponent implements OnInit {
       response => {
         this.navigateToList(); // this.router.navigate(['/clientes']);
         this.showToast('Saved successfully!');
+      },
+      err => {
+        this.errors = err.error.errors as string[]; // this.errors is an array of string binded to the View.
       }
     );
     console.log(this.cliente);

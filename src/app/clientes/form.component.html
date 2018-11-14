@@ -1,11 +1,19 @@
 <div class="card bg-dark text-white">
   <div class="card-header"> {{titulo}} </div>
   <div class="card-body">
-    <form (ngSubmit) = "create()">
+    <form (ngSubmit) = "create()" #frm="ngForm">
         <div class="form-group row">
           <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
           <div class="col-sm-6">
-            <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre">
+            <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" required minlength="4" #nombre="ngModel">
+            <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+              <div *ngIf="nombre.errors.required">
+                  Se requiere un nombre
+              </div>
+              <div *ngIf="nombre.errors.minlength">
+                  El nombre debe ser de al menos 4 caracteres.
+              </div>
+            </div>
           </div>
         </div>
 
@@ -26,13 +34,13 @@
           <div class="form-group row">
               <div class="col-sm-3">
                 
-                <button class="btn btn-sm btn-primary" role="button" (click)='create()' *ngIf="!cliente.id else elseBlock">Create</button>
+                <button class="btn btn-sm btn-primary" role="button" (click)='create()' *ngIf="!cliente.id else elseBlock" [disabled]="!frm.form.valid">Create</button>
                 
                 <ng-template #elseBlock>
-                  <button class="btn btn-sm btn-info" role="button" (click)='update()'>Save changes</button>
+                  <button class="btn btn-sm btn-info" role="button" (click)='update()' [disabled]="!frm.form.valid">Save changes</button>
                 </ng-template>
                 
-                <button style="margin-left:5px;" class="btn btn-sm btn-default" (click)="gotoList()">Cancel</button>
+                <button style="margin-left:5px;" class="btn btn-sm btn-default" (click)="navigateToList()">Cancel</button>
 
               </div>
                
