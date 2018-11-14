@@ -1,27 +1,37 @@
 <div class="card border-info mb-3">
   <div class="card-header">Clientes</div>
   <div class="card-body text-info">
-    <h5 class="card-title">Listado de Clientes</h5>
+    <h5 class="card-title">Listado de Clientes (List of customers)</h5>
     
     <div class="my-2 text-left">
       <button class="btn btn-sm btn-rounded btn-default" type="button" routerLink="/clientes/form">Crear Cliente</button>
     </div>
 
-    <table class="table table-bordered table-striped">
+    <div class="alert alert-warning" *ngIf="clientes?.length == 0">
+      No hay datos que mostrar (there's no data to show)
+    </div>
+    <table class="table table-bordered table-striped" *ngIf="clientes?.length > 0">
       <thead>
         <tr>
           <th>Id</th>
           <th>Nombre</th>
+          <th>Apellido</th>
           <th>Email</th>
-          <th>Creado</th>          
+          <th>Creado</th>
+          <th>Edit</th>          
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cliente of clientes">
-          <td>{{ cliente.id }}</td>
-          <td>{{ cliente.nombre }}</td>
-          <td>{{ cliente.email }}</td>
-          <td>{{ cliente.createAt }}</td>
+        <tr *ngFor="let c of clientes">
+          <td>{{ c.id }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.apellido }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.createAt }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-primary" name="button" [routerLink]="['/clientes/form', c.id]">Edit</button>
+            <button type="button" class="btn btn-sm btn-danger" name="button" (click)="delete(c)">Delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
