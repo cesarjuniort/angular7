@@ -8,6 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import swal from 'sweetalert2';
 import {Router} from '@angular/router';
+import { formatDate } from '@angular/common';
 
 @Injectable()
 export class ClienteService {
@@ -17,9 +18,16 @@ export class ClienteService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getClientes(): Observable<Cliente[]> {
-    return this.http.get(this.urlEndPoint).pipe(
-      map( response => response as Cliente[])
+  getClientes(page: number): Observable<any> {
+    return this.http.get(this.urlEndPoint + '/page/' + page).pipe(
+      map( (response: any) => {
+       // const clientes = response as Cliente[];
+       return (response.content as Cliente[] ).map(c => {
+        c.nombre = c.nombre.toUpperCase();
+        c.createAt = formatDate(c.createAt, 'MMM-dd-yyyy', 'en-US');
+        return c;
+       });
+      })
     );
   }
 

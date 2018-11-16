@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import swal, { SweetAlertOptions, SweetAlertResult, SweetAlertType } from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -11,13 +12,20 @@ import swal, { SweetAlertOptions, SweetAlertResult, SweetAlertType } from 'sweet
 export class ClientesComponent implements OnInit {
 
   clientes: Cliente[];
-  constructor(private clienteService: ClienteService) { }
+  constructor(private clienteService: ClienteService,
+    private activatedRoute: ActivatedRoute
+    ) { }
 
   ngOnInit() {
-    // this.clientes = this.clienteService.getClientes();
-    this.clienteService.getClientes().subscribe(
-       apiCliente => this.clientes = apiCliente
-    );
+    this.activatedRoute.paramMap.subscribe( p => {
+      let page: number = +p.get('page');
+      if (!page) {
+        page = 0;
+      }
+      this.clienteService.getClientes(page).subscribe(
+        apiCliente => this.clientes = (apiCliente as Cliente[])
+      );
+    });
   }
 
   delete(cliente: Cliente): void {
