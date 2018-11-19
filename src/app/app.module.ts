@@ -7,6 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 import { DirectivaComponent } from './directiva/directiva.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { ClienteService } from './clientes/cliente.service';
+import { PaginatorComponent } from './paginator/paginator.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule} from '@angular/common/http';
 import { FormComponent } from './clientes/form.component';
@@ -29,7 +30,8 @@ const routes: Routes = [
     FooterComponent,
     DirectivaComponent,
     ClientesComponent,
-    FormComponent
+    FormComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,

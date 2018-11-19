@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ClientesComponent implements OnInit {
 
   clientes: Cliente[];
+  paginator: any;
   constructor(private clienteService: ClienteService,
     private activatedRoute: ActivatedRoute
     ) { }
@@ -23,7 +24,10 @@ export class ClientesComponent implements OnInit {
         page = 0;
       }
       this.clienteService.getClientes(page).subscribe(
-        apiCliente => this.clientes = (apiCliente as Cliente[])
+        apiCliente =>  {
+          this.clientes = (apiCliente.content as Cliente[]);
+          this.paginator = apiCliente;
+        }
       );
     });
   }
