@@ -80,4 +80,18 @@ export class ClienteService {
       })
     );
   }
+
+  uploadPhoto(file: File, id: any) {
+    const frmData = new FormData();
+    frmData.append('photo', file);
+    frmData.append('id', id);
+    return this.http.post(`${this.urlEndPoint}/upload`, frmData).pipe(
+      map((resp: any) => resp.cliente as Cliente),
+      catchError(e => {
+        console.error(e.error.errMsg);
+        swal('Error', e.error.errMsg, 'error');
+        return throwError(e);
+      })
+    );
+  }
 }
