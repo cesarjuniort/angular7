@@ -1,3 +1,5 @@
+<app-detalle-cliente *ngIf="selectedCliente" [cliente]="selectedCliente"></app-detalle-cliente>
+
 <div class="card border-info mb-3">
   <div class="card-header">Clientes</div>
   <div class="card-body text-info">
@@ -23,7 +25,11 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of clientes">
-          <td><button type="button" class="btn btn-sm btn-link" [routerLink]="['/clientes/detail', c.id]"> {{ c.id }} </button></td>
+          <td>
+              <img  *ngIf="c?.photo" style="width: 64px; cursor: pointer;" class="img-thumbnail rounded" (click)="showModal(c)" src="http://localhost:8080/api/uploads/img/{{c.photo}}" alt="">
+              <img  *ngIf="!c?.photo" style="width: 64px; cursor: pointer;" title="No photo assigned, click here to assign one." class="img-thumbnail rounded" (click)="showModal(c)" src="http://localhost:8080/images/no_user.png" alt="">
+            <!-- <button type="button" class="btn btn-sm btn-link"  (click)="showModal(c)"> {{ c.id }} </button> -->
+          </td>
           <td>{{ c.nombre }}</td>
           <td>{{ c.apellido }}</td>
           <td>{{ c.email }}</td>
@@ -36,9 +42,5 @@
       </tbody>
     </table>
     <paginator-nav *ngIf="paginator" [paginator]="paginator"></paginator-nav>
-
-
-
-
   </div>
 </div>

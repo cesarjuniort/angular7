@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
-import { ActivatedRoute } from '@angular/router';
+// import { ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
+import { HttpEventType } from '@angular/common/http';
+import {ModalService} from './modal.service';
+
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -10,21 +13,24 @@ import swal from 'sweetalert2';
   styleUrls: ['./detalle.component.css']
 })
 export class DetalleComponent implements OnInit {
-  private cliente: Cliente;
+  @Input() cliente: Cliente;
   private selectedPhoto: File;
   titulo = 'Details';
+  uploadProgress = 0;
 
-  constructor(private clienteService: ClienteService, private activatedRouter: ActivatedRoute) { }
+
+  constructor(private clienteService: ClienteService,
+    private modalService: ModalService) { }
 
   ngOnInit() {
-    this.activatedRouter.paramMap.subscribe(params => {
-      const id: number = +params.get('id');
-      if (id) {
-        this.clienteService.getCliente(id).subscribe(c => {
-          this.cliente = c;
-        });
-      }
-    });
+    // this.activatedRouter.paramMap.subscribe(params => {
+    //   const id: number = +params.get('id');
+    //   if (id) {
+    //     this.clienteService.getCliente(id).subscribe(c => {
+    //       this.cliente = c;
+    //     });
+    //   }
+    // });
   }
 
   setSelectedPhoto(event) {
@@ -38,6 +44,7 @@ export class DetalleComponent implements OnInit {
       this.selectedPhoto = selFile;
       console.log('selected photo: ', this.selectedPhoto);
     }
+    this.uploadProgress = 0;
   }
 
   uploadPhoto() {
@@ -46,10 +53,22 @@ export class DetalleComponent implements OnInit {
       return;
     }
     this.clienteService.uploadPhoto(this.selectedPhoto, this.cliente.id)
-    .subscribe( c => {
-      this.cliente = c;
-      swal('Completed successfully!', `The photo has been uploaded successfully! File: ${this.cliente.photo}`, 'success');
+    .subscribe( evt => {
+      if (evt.type === HttpEventType.UploadProgress) {
+        this.uploadProgress = Math.round((evt.loaded / evt.total ) * 100);
+      } else if (evt.type === HttpEventType.Response) {
+        const response: any = evt.body;
+        this.cliente = response.cliente as Cliente;
+        swal('Completed successfully!', `The photo has been uploaded successfully! File: ${this.cliente.photo}`, 'success');
+      }
+      // this.cliente = c;
      });
+  }
+
+  closeModal() {
+    this.modalService.closeModal();
+    this.uploadProgress = 0;
+    this.selectedPhoto = null;
   }
 
 }
