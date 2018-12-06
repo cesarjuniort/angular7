@@ -20,17 +20,28 @@ export class ClientesComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.activatedRoute.paramMap.subscribe( p => {
+    this.loadClientes();
+
+    this.modalService.notifyUpload.subscribe(changedCliente => {
+      this.clientes = this.clientes.map(c => {
+        if (changedCliente.id === c.id) {
+          c.photo = changedCliente.photo;
+        }
+        return c;
+      });
+    });
+  }
+
+  private loadClientes() {
+    this.activatedRoute.paramMap.subscribe(p => {
       let page: number = +p.get('page');
       if (!page) {
         page = 0;
       }
-      this.clienteService.getClientes(page).subscribe(
-        apiCliente =>  {
-          this.clientes = (apiCliente.content as Cliente[]);
-          this.paginator = apiCliente;
-        }
-      );
+      this.clienteService.getClientes(page).subscribe(apiCliente => {
+        this.clientes = (apiCliente.content as Cliente[]);
+        this.paginator = apiCliente;
+      });
     });
   }
 
@@ -55,6 +66,7 @@ export class ClientesComponent implements OnInit {
       if (result.value) {
         this.clienteService.delete(cliente.id).subscribe(
           r => {
+            this.loadClientes();
             swalWithBootstrapButtons(
                 'Deleted!',
                 'The record has been deleted.',

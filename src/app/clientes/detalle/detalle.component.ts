@@ -59,6 +59,7 @@ export class DetalleComponent implements OnInit {
       } else if (evt.type === HttpEventType.Response) {
         const response: any = evt.body;
         this.cliente = response.cliente as Cliente;
+        this.modalService.notifyUpload.emit(this.cliente); // broadcast that the current cliente has updated its profile picture.
         swal('Completed successfully!', `The photo has been uploaded successfully! File: ${this.cliente.photo}`, 'success');
       }
       // this.cliente = c;
