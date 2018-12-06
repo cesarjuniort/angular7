@@ -13,6 +13,7 @@ import { HttpClientModule} from '@angular/common/http';
 import { FormComponent } from './clientes/form.component';
 import { FormsModule } from '@angular/forms';
 import { DetalleComponent } from './clientes/detalle/detalle.component';
+import { LoginComponent } from './user/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'clientes', component: ClientesComponent },
   { path: 'clientes/form', component: FormComponent },
   { path: 'clientes/page/:page', component: ClientesComponent },
-  { path: 'clientes/form/:id', component: FormComponent }
+  { path: 'clientes/page/:page', component: ClientesComponent },
+  { path: 'login', component: LoginComponent }
  // { path: 'clientes/detail/:id', component: DetalleComponent },
 ];
 
@@ -34,7 +36,8 @@ const routes: Routes = [
     ClientesComponent,
     FormComponent,
     PaginatorComponent,
-    DetalleComponent
+    DetalleComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
